@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brar Wiki</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f9fafb;
+            color: #000000;
+            line-height: 1.6;
+        }
+
+        * {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        .wiki-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        
+        .wiki-table th, .wiki-table td {
+            border: 1px solid #d1d5db;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .wiki-table th {
+            background-color: #f3f4f6;
+            font-weight: bold;
+            width: 35%;
+        }
+
+        .item-card {
+            border: 1px solid #e5e7eb;
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+        .item-card:hover {
+            border-color: #9ca3af;
+        }
+
+        input, textarea {
+            font-weight: normal !important;
+        }
+
+        body:not(.dev-mode) .dev-control {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="bg-white border-b border-gray-300 p-6 relative">
+        <div class="max-w-4xl mx-auto relative flex flex-col items-center gap-3">
+            <h1 class="text-3xl font-bold cursor-pointer tracking-wide text-black" onclick="navigateTo('home')">Brar Wiki</h1>
+            <nav class="text-sm space-x-6 mt-2">
+                <a href="#" onclick="navigateTo('home'); return false;" class="text-black hover:text-blue-600 font-bold">Main Page</a>
+                <a href="#mods" onclick="navigateTo('home'); return true;" class="text-black hover:text-blue-600">Mods</a>
+                <a href="#characters" onclick="navigateTo('home'); return true;" class="text-black hover:text-blue-600">Characters</a>
+                <a href="#songs" onclick="navigateTo('home'); return true;" class="text-black hover:text-blue-600">Songs</a>
+            </nav>
+            <div class="absolute right-0 top-0 hidden md:block dev-control">
+                <button onclick="copyHTML()" class="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 border border-blue-200 hover:bg-blue-100 cursor-pointer font-bold">Copy HTML</button>
+            </div>
+        </div>
+        <div class="max-w-4xl mx-auto mt-4 md:hidden flex justify-center dev-control">
+            <button onclick="copyHTML()" class="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 border border-blue-200 hover:bg-blue-100 cursor-pointer font-bold">Copy HTML</button>
+        </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto p-4 mt-4">
+        <main class="w-full bg-white border border-gray-300 p-6 md:p-10 min-h-[500px]">
+            
+            <div id="view-home" class="view-section active">
+                <h2 class="text-2xl font-bold pb-2 mb-6 text-black">Main Page</h2>
+                <p class="mb-8 text-black">welcome to my ass</p>
+
+                <div class="flex justify-between items-end border-b border-gray-300 pb-1 mt-8 mb-4">
+                    <h3 id="mods" class="text-xl font-bold text-black">Mods</h3>
+                    <button onclick="openCreate('mods')" class="dev-control text-xs bg-blue-50 text-blue-700 px-3 py-1 border border-blue-200 hover:bg-blue-100 cursor-pointer font-bold">Add New</button>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="list-mods"></div>
+
+                <div class="flex justify-between items-end border-b border-gray-300 pb-1 mt-8 mb-4">
+                    <h3 id="characters" class="text-xl font-bold text-black">Characters</h3>
+                    <button onclick="openCreate('characters')" class="dev-control text-xs bg-blue-50 text-blue-700 px-3 py-1 border border-blue-200 hover:bg-blue-100 cursor-pointer font-bold">Add New</button>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="list-characters"></div>
+
+                <div class="flex justify-between items-end border-b border-gray-300 pb-1 mt-8 mb-4">
+                    <h3 id="songs" class="text-xl font-bold text-black">Songs</h3>
+                    <button onclick="openCreate('songs')" class="dev-control text-xs bg-blue-50 text-blue-700 px-3 py-1 border border-blue-200 hover:bg-blue-100 cursor-pointer font-bold">Add New</button>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="list-songs"></div>
+            </div>
+
+            <div id="view-detail" class="view-section">
+                <div class="text-xs text-gray-500 mb-4 pb-2 border-b border-gray-200">
+                    <a href="#" onclick="navigateTo('home'); return false;" class="hover:underline text-gray-500">Home</a> &gt; 
+                    <span id="detail-category">Characters</span> &gt; 
+                    <span id="detail-breadcrumb-name" class="font-bold text-black">Buruaru</span>
+                </div>
+
+                <div class="flex justify-between items-end border-b border-gray-300 pb-2 mb-4">
+                    <h2 id="detail-title" class="text-3xl font-bold text-black">Buruaru</h2>
+                    <button onclick="openEdit()" class="dev-control text-sm bg-gray-100 text-black px-3 py-1 border border-gray-300 hover:bg-gray-200 cursor-pointer">Edit</button>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-1 order-2 md:order-1" id="detail-left-pane"></div>
+
+                    <div class="w-full md:w-64 order-1 md:order-2 flex-shrink-0">
+                        <div class="border border-gray-300 bg-gray-50 p-2">
+                            <div class="font-bold text-center mb-2" id="detail-box-title">Buruaru</div>
+                            <div id="detail-img-container" class="w-full aspect-square border border-gray-300 mb-2 bg-white flex items-center justify-center text-gray-400 text-sm overflow-hidden">
+                                <img id="detail-image" src="https://cdn.discordapp.com/attachments/988083080889778236/1503586554453426196/animated_1.gif?ex=6a03e399&amp;is=6a029219&amp;hm=96dabcb130a43d03360d351cf98b55d4e13ceb572e2933ede74fa2b683134de4&amp;" alt="Thumbnail" class="w-full h-full object-cover" style="object-position: 50% 50%;">
+                                <span id="detail-img-placeholder" class="hidden">Placeholder</span>
+                            </div>
+                            
+                            <table class="wiki-table text-sm">
+                                <tbody id="detail-right-pane"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-edit" class="view-section">
+                <h2 id="edit-page-title" class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-6 text-black">Edit Page</h2>
+                
+                <div class="space-y-4 max-w-2xl bg-gray-50 p-6 border border-gray-300">
+                    <div>
+                        <label class="block font-bold mb-1 text-sm text-black">Name</label>
+                        <input type="text" id="edit-name" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1 text-sm text-black">Thumbnail Image URL</label>
+                        <input type="text" id="edit-img" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black" placeholder="https://...">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1 text-sm text-black">Thumbnail Position (X% / Y%)</label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" id="edit-img-x" min="0" max="100" class="w-20 border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black" placeholder="X" value="50">
+                            <span class="text-sm text-black">%</span>
+                            <span class="text-gray-400 mx-2">/</span>
+                            <input type="number" id="edit-img-y" min="0" max="100" class="w-20 border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black" placeholder="Y" value="50">
+                            <span class="text-sm text-black">%</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1 text-sm text-black">Overview</label>
+                        <textarea id="edit-desc" rows="4" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black"></textarea>
+                    </div>
+
+                    <div id="edit-dynamic-fields" class="space-y-4 pt-4 border-t border-gray-300"></div>
+                    
+                    <div class="flex gap-3 mt-6 pt-4 border-t border-gray-300 items-center justify-between">
+                        <div class="flex gap-3">
+                            <button onclick="saveEdit()" class="bg-blue-600 text-white px-5 py-2 font-bold cursor-pointer hover:bg-blue-700">Save</button>
+                            <button onclick="cancelEdit()" class="bg-white text-black px-5 py-2 border border-gray-400 cursor-pointer hover:bg-gray-100">Cancel</button>
+                        </div>
+                        <div id="delete-btn-group" class="">
+                            <button onclick="showDeleteConfirm()" class="bg-red-50 text-red-600 px-4 py-2 border border-red-200 font-bold cursor-pointer hover:bg-red-100">Delete</button>
+                        </div>
+                        <div id="delete-confirm-group" class="flex gap-2 items-center hidden">
+                            <span class="text-sm text-red-600 font-bold">Are you sure?</span>
+                            <button onclick="confirmDelete()" class="bg-red-600 text-white px-3 py-1 font-bold cursor-pointer hover:bg-red-700">Yes</button>
+                            <button onclick="cancelDelete()" class="bg-white text-black px-3 py-1 border border-gray-400 cursor-pointer hover:bg-gray-100">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        let currentCategory = '';
+        let currentItemId = '';
+
+        const initialWikiData = {
+          "mods": [
+                    {
+                              "id": "mod1",
+                              "name": "IMPOSTORS FUNK! V1",
+                              "img": "https://images.gamebanana.com/img/ss/mods/530-90_64c52155590f6.jpg",
+                              "imgPosX": 50,
+                              "imgPosY": 50,
+                              "desc": "THIS IS SO FUCKING MOD",
+                              "releaseDate": "2023-10-23",
+                              "director": "Buruaru, Beancat",
+                              "links": "[Download](https://gamebanana.com/mods/459227)"
+                    },
+                    {
+                              "id": "mod2",
+                              "name": "Impostors Funk!: Rework",
+                              "img": "https://images.gamebanana.com/img/ss/mods/530-90_69fb5129e99fe.jpg",
+                              "imgPosX": 80,
+                              "imgPosY": 50,
+                              "desc": "THIS IS SO COOL MOD",
+                              "releaseDate": "2026-05-07",
+                              "director": "Buruaru",
+                              "links": "[Download](https://gamebanana.com/mods/675133)"
+                    },
+                    {
+                              "id": "mod3",
+                              "name": "Among Rhythm",
+                              "img": "",
+                              "imgPosX": 50,
+                              "imgPosY": 50,
+                              "desc": "WHAT",
+                              "releaseDate": "TBA",
+                              "director": "Buruaru, Nukko",
+                              "links": ""
+                    }
+          ],
+          "characters": [
+                    {
+                              "id": "char1",
+                              "name": "Buruaru",
+                              "img": "https://cdn.discordapp.com/attachments/988083080889778236/1503586554453426196/animated_1.gif?ex=6a03e399&is=6a029219&hm=96dabcb130a43d03360d351cf98b55d4e13ceb572e2933ede74fa2b683134de4&",
+                              "imgPosX": 50,
+                              "imgPosY": 50,
+                              "desc": "Buruaru is the main character of [Impostors Funk](https://gamebanana.com/mods/459227).\n\nShe has a younger sister named Aruka. While the game’s owner is also named Buruaru, please keep in mind that they are two different characters.\nBuruaru once had a mother, but she was so terrible at Among Us that she got reported and died.\nHe wears the same traffic cone as Black Impostor from VS Impostor, but the fact that they’re the same color is purely coincidental. YEP.",
+                              "role": "Impostor",
+                              "gender": "Female",
+                              "sexuality": "Bisexual",
+                              "age": "19",
+                              "nationality": "Japan",
+                              "owner": "Buruaru",
+                              "links": "[IMPOSTORS FUNK!](https://gamebanana.com/mods/459227) (CANCELLED)\n[Impostors Funk!:Rework DLC](https://gamebanana.com/mods/675133) (New!)\n[17_funk](https://gamebanana.com/mods/591308)\n[IMPOSTORS FUNK! V4](https://gamebanana.com/mods/504369)\n[Impostors Funk! DEMO](https://gamebanana.com/mods/416519)",
+                              "relatedChars": [
+                                        {
+                                                  "id": "char2",
+                                                  "label": "Older sister"
+                                        },
+                                        {
+                                                  "isCustom": true,
+                                                  "name": "[Mikan](https://gamebanana.com/mods/487336)",
+                                                  "label": "Girlfriend"
+                                        }
+                              ],
+                              "gallery": [
+                                        {
+                                                  "tab": "DLC",
+                                                  "title": "Idle",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503586554453426196/animated_1.gif?ex=6a03e399&is=6a029219&hm=96dabcb130a43d03360d351cf98b55d4e13ceb572e2933ede74fa2b683134de4&"
+                                        },
+                                        {
+                                                  "tab": "DLC",
+                                                  "title": "Left",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503589268331958423/animated_3.gif?ex=6a03e620&is=6a0294a0&hm=cea276388c7acf3cd3b94df78b197a7a3b85a6b9af4548be11f9838607f759f9&"
+                                        },
+                                        {
+                                                  "tab": "DLC",
+                                                  "title": "Down",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503589267975438356/animated_2.gif?ex=6a03e620&is=6a0294a0&hm=2ad0d2ab339d340b5d0d02d69a57ba95a0ae204c99032561524362f575ba38d4&"
+                                        },
+                                        {
+                                                  "tab": "DLC",
+                                                  "title": "Up",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503589358207238335/animated_5.gif?ex=6a03e636&is=6a0294b6&hm=4073d4c34398390d33c2f8b00c3f10692f6c471b4b07decd900aa8d16cf76362&"
+                                        },
+                                        {
+                                                  "tab": "DLC",
+                                                  "title": "Right",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503589268725956738/animated_4.gif?ex=6a03e621&is=6a0294a1&hm=dfd4790e8d4959017799d47e53fad598f1f1b82124bdb485517d199f8393069d&"
+                                        },
+                                        {
+                                                  "tab": "DLC",
+                                                  "title": "Scared",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503595185886593024/animated_6.gif?ex=6a03eba3&is=6a029a23&hm=927b5703b81086fd7bf38b2d1d8b6b17c27a50bb1018353f5786bc51e16ce61e&"
+                                        },
+                                        {
+                                                  "tab": "V1",
+                                                  "title": "Idle",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503800561311547472/idle.gif?ex=6a04aae9&is=6a035969&hm=8842c31eac8869ebf10c12fa79f85bb4dcf8862cac9eee20b19790158acaf15f&"
+                                        },
+                                        {
+                                                  "tab": "V1",
+                                                  "title": "Left",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503800562011865218/left_1.gif?ex=6a04aae9&is=6a035969&hm=ca6d7f1a2462e7bcfb1c956115e79e4487abb489bc3c6aa55cf36c261ff6f0db&"
+                                        },
+                                        {
+                                                  "tab": "V1",
+                                                  "title": "Down",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503800560430612612/down_2.gif?ex=6a04aae8&is=6a035968&hm=a5c5a6042db1288b7c251c690bc765f60ac8e5f16b4cff80522186e2111b7277&"
+                                        },
+                                        {
+                                                  "tab": "V1",
+                                                  "title": "Up",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503800563412766760/up_1.gif?ex=6a04aae9&is=6a035969&hm=05586b813d377e1844c5d2ceec075a92e9082d3e1a3725fe721451616884ddd9&"
+                                        },
+                                        {
+                                                  "tab": "V1",
+                                                  "title": "Right",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503800562733416568/right_2.gif?ex=6a04aae9&is=6a035969&hm=4fed7111fd5de4864d4aa4e8a99920fd415717cb59acfbb5f9683d495a8d0630&"
+                                        }
+                              ]
+                    },
+                    {
+                              "id": "char2",
+                              "name": "Aruka",
+                              "img": "https://media.discordapp.net/attachments/988083080889778236/1503791774978801746/animated.gif?ex=6a04a2ba&is=6a03513a&hm=b49fe4840e3d4a4c4a63c161c950d82a6d252c05cc3ba085fc3ef16c7546fdbf&=&width=644&height=644",
+                              "imgPosX": 50,
+                              "imgPosY": 50,
+                              "desc": "Aruka is :Buruaru:'s younger sister. She has already been killed by Grim.",
+                              "role": "Impostor?",
+                              "gender": "Female",
+                              "sexuality": "Unknown",
+                              "age": "18",
+                              "nationality": "Japane",
+                              "owner": "Buruaru",
+                              "links": "",
+                              "relatedChars": [
+                                        {
+                                                  "id": "char1",
+                                                  "label": ""
+                                        }
+                              ],
+                              "gallery": [
+                                        {
+                                                  "tab": "April(V4)",
+                                                  "title": "Idle",
+                                                  "url": "https://media.discordapp.net/attachments/988083080889778236/1503791774978801746/animated.gif?ex=6a04a2ba&is=6a03513a&hm=b49fe4840e3d4a4c4a63c161c950d82a6d252c05cc3ba085fc3ef16c7546fdbf&=&width=644&height=644"
+                                        },
+                                        {
+                                                  "tab": "April(V4)",
+                                                  "title": "Left",
+                                                  "url": "https://media.discordapp.net/attachments/988083080889778236/1503793862429118595/Left.gif?ex=6a04a4ab&is=6a03532b&hm=c50b2238f3ad4748671b8857b444e497652069429cf537e5cfd196ebdd4ea135&=&width=771&height=644"
+                                        },
+                                        {
+                                                  "tab": "April(V4)",
+                                                  "title": "Down",
+                                                  "url": "https://media.discordapp.net/attachments/988083080889778236/1503793863414780066/Down.gif?ex=6a04a4ac&is=6a03532c&hm=b5aa40da9bd7d036f3116e2fab6256e7ed309fec862aa2e7423a787f4a677da5&=&width=644&height=644"
+                                        },
+                                        {
+                                                  "tab": "April(V4)",
+                                                  "title": "Up",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503793863104528524/Up.gif?ex=6a04a4ac&is=6a03532c&hm=1bb1926575068be47676a65b3f060b1199f7f4895048e6e2c79db21e27d97c2b&"
+                                        },
+                                        {
+                                                  "tab": "April(V4)",
+                                                  "title": "Right",
+                                                  "url": "https://cdn.discordapp.com/attachments/988083080889778236/1503793862785765396/Right_1.gif?ex=6a04a4ac&is=6a03532c&hm=5ad009d14184d819899fd9a2db95d093452f201cec8f5ae5d938cf572bc5ba21&"
+                                        }
+                              ]
+                    }
+          ],
+          "songs": [
+                    {
+                              "id": "song1",
+                              "name": "Placeholder",
+                              "img": "https://media.discordapp.net/attachments/988083080889778236/1503787825169039370/1311_20260513005546.png?ex=6a049f0c&is=6a034d8c&hm=7ab50dcf083ca74b3e8dad17697d57e19461b9ea9c0e3b7850a3daac58c25888&=&format=webp&quality=lossless&width=873&height=873",
+                              "imgPosX": 49,
+                              "imgPosY": 50,
+                              "desc": "Placeholder",
+                              "composer": "Placeholder",
+                              "gallery": []
+                    }
+          ]
+};
+
+        let wikiData = { mods: [], characters: [], songs: [] };
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+
+        function escapeAttr(str) {
+            if (!str) return '';
+            return str.replace(/"/g, '&quot;');
+        }
+
+        function parseText(text) {
+            if (!text) return '';
+            
+            // 1. URL Links (Markdown style or raw URL)
+            const regexUrl = /\[([^\]]+)\]\((https?:\/\/[^\s<]+?)\)|(https?:\/\/[^\s<]+)/g;
+            text = text.replace(regexUrl, (match, mdText, mdUrl, rawUrl) => {
+                if (mdUrl) {
+                    return `<a href="${mdUrl}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline break-all">${mdText}</a>`;
+                } else if (rawUrl) {
+                    return `<a href="${rawUrl}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline break-all">${rawUrl}</a>`;
+                }
+                return match;
+            });
+
+            // 2. Internal Wiki Links (:Item Name:)
+            const regexInternal = /:([^:]+):/g;
+            text = text.replace(regexInternal, (match, itemName) => {
+                let foundItem = null;
+                let foundCategory = '';
+                for (const category of ['mods', 'characters', 'songs']) {
+                    const item = wikiData[category].find(i => i.name === itemName);
+                    if (item) {
+                        foundItem = item;
+                        foundCategory = category;
+                        break;
+                    }
+                }
+                if (foundItem) {
+                    return `<a href="#" onclick="openDetail('${foundCategory}', '${foundItem.id}'); return false;" class="text-blue-600 hover:underline font-bold">${itemName}</a>`;
+                }
+                return match; // If item is not found, keep the original text
+            });
+
+            // 3. Text Decorations
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); // Bold
+            text = text.replace(/--(.+?)--/g, '<del>$1</del>'); // Strikethrough (Diagonal line / crossed out)
+            text = text.replace(/~~(.+?)~~/g, '<em>$1</em>'); // Italic
+
+            return text;
+        }
+
+        function initLocalData() {
+            const storedData = localStorage.getItem('brarWikiData');
+            if (storedData) {
+                wikiData = JSON.parse(storedData);
+                ['mods', 'characters', 'songs'].forEach(category => {
+                    if (!wikiData[category]) wikiData[category] = [];
+                });
+            } else {
+                wikiData = JSON.parse(JSON.stringify(initialWikiData));
+            }
+
+            renderList('mods', wikiData.mods);
+            renderList('characters', wikiData.characters);
+            renderList('songs', wikiData.songs);
+        }
+
+        const pressedKeys = new Set();
+        window.addEventListener('keydown', (e) => {
+            pressedKeys.add(e.code);
+            if ((pressedKeys.has('ShiftLeft') || pressedKeys.has('ShiftRight')) &&
+                pressedKeys.has('KeyI') &&
+                pressedKeys.has('KeyO') &&
+                pressedKeys.has('KeyP')) {
+                
+                document.body.classList.toggle('dev-mode');
+                const isDev = document.body.classList.contains('dev-mode');
+                localStorage.setItem('brarWikiDevMode', isDev ? 'true' : 'false');
+                showNotification(isDev ? "Edit Mode: ON" : "Edit Mode: OFF");
+                
+                pressedKeys.clear();
+            }
+        });
+        window.addEventListener('keyup', (e) => {
+            pressedKeys.delete(e.code);
+        });
+        window.addEventListener('blur', () => {
+            pressedKeys.clear();
+        });
+
+        if (localStorage.getItem('brarWikiDevMode') === 'true') {
+            document.body.classList.add('dev-mode');
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('brarWikiData', JSON.stringify(wikiData));
+        }
+
+        initLocalData();
+
+        function renderList(categoryId, items) {
+            const container = document.getElementById(`list-${categoryId}`);
+            if (!container) return;
+
+            const fallbackImg = "https://cdn.discordapp.com/attachments/988083080889778236/1503787825169039370/1311_20260513005546.png?ex=6a049f0c&is=6a034d8c&hm=7ab50dcf083ca74b3e8dad17697d57e19461b9ea9c0e3b7850a3daac58c25888&";
+
+            let html = '';
+            items.forEach(item => {
+                const posX = item.imgPosX !== undefined ? item.imgPosX : 50;
+                const posY = item.imgPosY !== undefined ? item.imgPosY : 50;
+
+                const imageHtml = item.img 
+                    ? `<img src="${escapeAttr(item.img)}" alt="${escapeAttr(item.name)}" class="w-full h-auto aspect-square object-cover mb-2 border border-gray-200 bg-gray-100" style="object-position: ${posX}% ${posY}%;">`
+                    : `<img src="${fallbackImg}" alt="Placeholder" class="w-full h-auto aspect-square object-cover mb-2 border border-gray-200 bg-gray-100" style="object-position: 50% 50%;">`;
+
+                html += `
+                    <div class="item-card p-2" onclick="openDetail('${categoryId}', '${item.id}')">
+                        ${imageHtml}
+                        <div class="text-sm font-bold text-blue-600 text-center truncate">${escapeHTML(item.name)}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function navigateTo(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(`view-${viewId}`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function switchGalleryTab(btn, tabName) {
+            const container = btn.closest('#detail-left-pane');
+            
+            container.querySelectorAll('.gallery-tab-btn').forEach(b => {
+                b.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-700');
+                b.classList.add('bg-gray-50', 'border-transparent', 'text-gray-500');
+            });
+            btn.classList.remove('bg-gray-50', 'border-transparent', 'text-gray-500');
+            btn.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-700');
+
+            container.querySelectorAll('.gallery-tab-content').forEach(content => {
+                if (content.getAttribute('data-tab') === tabName) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        function openDetail(category, itemId) {
+            const item = wikiData[category].find(i => i.id === itemId);
+            if (!item) return;
+
+            currentCategory = category;
+            currentItemId = itemId;
+
+            const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+            document.getElementById('detail-category').textContent = categoryName;
+            document.getElementById('detail-breadcrumb-name').textContent = item.name;
+            document.getElementById('detail-title').textContent = item.name;
+            document.getElementById('detail-box-title').textContent = item.name;
+
+            const imgElement = document.getElementById('detail-image');
+            const placeholderElement = document.getElementById('detail-img-placeholder');
+            const fallbackImg = "https://cdn.discordapp.com/attachments/988083080889778236/1503787825169039370/1311_20260513005546.png?ex=6a049f0c&is=6a034d8c&hm=7ab50dcf083ca74b3e8dad17697d57e19461b9ea9c0e3b7850a3daac58c25888&";
+
+            if (item.img) {
+                const posX = item.imgPosX !== undefined ? item.imgPosX : 50;
+                const posY = item.imgPosY !== undefined ? item.imgPosY : 50;
+                imgElement.style.objectPosition = `${posX}% ${posY}%`;
+                imgElement.src = item.img;
+            } else {
+                imgElement.style.objectPosition = '50% 50%';
+                imgElement.src = fallbackImg;
+            }
+            imgElement.classList.remove('hidden');
+            if(placeholderElement) placeholderElement.classList.add('hidden');
+
+            let leftHtml = `<h3 class="text-lg font-bold border-b border-gray-200 mb-2 pb-1">Overview</h3>`;
+            leftHtml += `<p class="mb-6 whitespace-pre-wrap">${parseText(escapeHTML(item.desc || ''))}</p>`;
+
+            if (category === 'characters' || category === 'songs') {
+                if (item.gallery && item.gallery.length > 0) {
+                    leftHtml += `<h3 class="text-lg font-bold border-b border-gray-200 mt-6 mb-4 pb-1">Gallery</h3>`;
+                    
+                    const tabs = [...new Set(item.gallery.map(g => g.tab || 'Main'))];
+                    
+                    if (tabs.length > 1) {
+                        leftHtml += `<div class="flex border-b border-gray-300 mb-4 gap-2 overflow-x-auto">`;
+                        tabs.forEach((tab, index) => {
+                            const activeClass = index === 0 ? 'bg-blue-50 border-blue-500 text-blue-700' : 'bg-gray-50 border-transparent text-gray-500 hover:bg-gray-100';
+                            leftHtml += `<button onclick="switchGalleryTab(this, '${escapeAttr(tab)}')" class="gallery-tab-btn px-4 py-2 border-b-2 font-bold text-sm whitespace-nowrap ${activeClass}">${escapeHTML(tab)}</button>`;
+                        });
+                        leftHtml += `</div>`;
+                    }
+
+                    leftHtml += `<div class="gallery-content-container relative min-h-[100px]">`;
+                    tabs.forEach((tab, index) => {
+                        const hiddenClass = index === 0 ? '' : 'hidden';
+                        leftHtml += `<div class="gallery-tab-content grid grid-cols-2 md:grid-cols-3 gap-4 mb-6 ${hiddenClass}" data-tab="${escapeAttr(tab)}">`;
+                        
+                        item.gallery.filter(g => (g.tab || 'Main') === tab).forEach(g => {
+                            const fallbackImg = "https://cdn.discordapp.com/attachments/988083080889778236/1503787825169039370/1311_20260513005546.png?ex=6a049f0c&is=6a034d8c&hm=7ab50dcf083ca74b3e8dad17697d57e19461b9ea9c0e3b7850a3daac58c25888&";
+                            const imgTag = g.url ? `<img src="${escapeAttr(g.url)}" alt="${escapeAttr(g.title)}" class="w-full h-auto aspect-square object-cover bg-white border border-gray-200 mb-2">` : `<img src="${fallbackImg}" alt="Placeholder" class="w-full h-auto aspect-square object-cover bg-white border border-gray-200 mb-2">`;
+                            leftHtml += `
+                            <div class="border border-gray-300 bg-gray-50 p-2 text-center">
+                                ${imgTag}
+                                <div class="text-sm font-bold truncate">${escapeHTML(g.title)}</div>
+                            </div>`;
+                        });
+                        
+                        leftHtml += `</div>`;
+                    });
+                    leftHtml += `</div>`;
+                }
+            }
+
+            if (category === 'mods' || category === 'characters') {
+                if (item.links && item.links.trim() !== '') {
+                    leftHtml += `<h3 class="text-lg font-bold border-b border-gray-200 mt-6 mb-2 pb-1">Links</h3>`;
+                    leftHtml += `<p class="mb-6 whitespace-pre-wrap">${parseText(escapeHTML(item.links))}</p>`;
+                }
+            }
+            document.getElementById('detail-left-pane').innerHTML = leftHtml;
+
+            let rightHtml = '';
+            if (category === 'mods') {
+                rightHtml += `<tr><th>Release Date</th><td>${parseText(escapeHTML(item.releaseDate || ''))}</td></tr>`;
+                rightHtml += `<tr><th>Director</th><td>${parseText(escapeHTML(item.director || ''))}</td></tr>`;
+            } else if (category === 'characters') {
+                let relatedLinks = (item.relatedChars || []).map(rObj => {
+                    let rLabel = typeof rObj === 'string' ? '' : rObj.label;
+                    let labelHtml = rLabel ? ` <span class="text-xs text-gray-500 font-normal">(${parseText(escapeHTML(rLabel))})</span>` : '';
+                    
+                    if (rObj.isCustom) {
+                        return `<div class="inline-block mr-3 mb-1"><span class="text-black">${parseText(escapeHTML(rObj.name))}</span>${labelHtml}</div>`;
+                    }
+
+                    let rId = typeof rObj === 'string' ? rObj : rObj.id;
+                    const rChar = wikiData.characters.find(c => c.id === rId);
+                    if (!rChar) return '';
+                    
+                    return `<div class="inline-block mr-3 mb-1"><a href="#" onclick="openDetail('characters', '${rId}'); return false;" class="text-blue-600 hover:underline">${escapeHTML(rChar.name)}</a>${labelHtml}</div>`;
+                }).filter(Boolean).join('');
+                
+                rightHtml += `<tr><th>Role</th><td>${parseText(escapeHTML(item.role || ''))}</td></tr>`;
+                rightHtml += `<tr><th>Related Characters</th><td class="align-top">${relatedLinks}</td></tr>`;
+                rightHtml += `<tr><th>Gender</th><td>${parseText(escapeHTML(item.gender || ''))}</td></tr>`;
+                rightHtml += `<tr><th>Sexuality</th><td>${parseText(escapeHTML(item.sexuality || ''))}</td></tr>`;
+                rightHtml += `<tr><th>Age</th><td>${parseText(escapeHTML(item.age || ''))}</td></tr>`;
+                rightHtml += `<tr><th>Nationality</th><td>${parseText(escapeHTML(item.nationality || ''))}</td></tr>`;
+                rightHtml += `<tr><th>Owner</th><td>${parseText(escapeHTML(item.owner || ''))}</td></tr>`;
+            } else if (category === 'songs') {
+                rightHtml += `<tr><th>Composer</th><td>${parseText(escapeHTML(item.composer || ''))}</td></tr>`;
+            }
+            document.getElementById('detail-right-pane').innerHTML = rightHtml;
+
+            navigateTo('detail');
+        }
+
+        function renderDynamicEditFields(item) {
+            const dynamicContainer = document.getElementById('edit-dynamic-fields');
+            let dynamicHtml = '';
+
+            if (currentCategory === 'mods') {
+                dynamicHtml += `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold mb-1 text-sm text-black">Release Date</label>
+                            <input type="text" id="edit-releaseDate" value="${escapeAttr(item.releaseDate || '')}" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1 text-sm text-black">Director</label>
+                            <input type="text" id="edit-director" value="${escapeAttr(item.director || '')}" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block font-bold mb-1 text-sm text-black">Links (URLs, etc.)</label>
+                        <textarea id="edit-links" rows="3" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">${escapeHTML(item.links || '')}</textarea>
+                    </div>
+                `;
+            } else if (currentCategory === 'characters') {
+                dynamicHtml += `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold mb-1 text-sm text-black">Role</label>
+                            <input type="text" id="edit-role" value="${escapeAttr(item.role || '')}" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1 text-sm text-black">Gender</label>
+                            <input type="text" id="edit-gender" value="${escapeAttr(item.gender || '')}" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1 text-sm text-black">Sexuality</label>
+                            <input type="text" id="edit-sexuality" value="${escapeAttr(item.sexuality || '')}" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1 text-sm text-black">Age</label>
+                            <input type="text" id="edit-age" value="${escapeAttr(item.age || '')}" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-1 text-sm text-black">Nationality</label>
+                            <input type="text" id="edit-nationality" value="${escapeAttr(item.nationality || '')}" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block font-bold mb-1 text-sm text-black">Owner</label>
+                            <input type="text" id="edit-owner" value="${escapeAttr(item.owner || '')}" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block font-bold mb-1 text-sm text-black">Related Characters</label>
+                        <div id="edit-related-chars-container"></div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block font-bold mb-1 text-sm text-black flex justify-between items-end">
+                            <span>Gallery (Variants, etc.)</span>
+                            <button type="button" onclick="addGalleryRow()" class="text-xs bg-gray-200 px-3 py-1 border border-gray-300 cursor-pointer font-bold hover:bg-gray-300 text-black">Add</button>
+                        </label>
+                        <div id="edit-gallery-list" class="space-y-2 border border-gray-300 p-2 bg-gray-100 min-h-[40px]"></div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block font-bold mb-1 text-sm text-black">Links (URLs, etc.)</label>
+                        <textarea id="edit-links" rows="3" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">${escapeHTML(item.links || '')}</textarea>
+                    </div>
+                `;
+            } else if (currentCategory === 'songs') {
+                dynamicHtml += `
+                    <div>
+                        <label class="block font-bold mb-1 text-sm text-black">Composer</label>
+                        <input type="text" id="edit-composer" value="${escapeAttr(item.composer || '')}" class="w-full border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-black">
+                    </div>
+                    <div class="mt-4">
+                        <label class="block font-bold mb-1 text-sm text-black flex justify-between items-end">
+                            <span>Gallery</span>
+                            <button type="button" onclick="addGalleryRow()" class="text-xs bg-gray-200 px-3 py-1 border border-gray-300 cursor-pointer font-bold hover:bg-gray-300 text-black">Add</button>
+                        </label>
+                        <div id="edit-gallery-list" class="space-y-2 border border-gray-300 p-2 bg-gray-100 min-h-[40px]"></div>
+                    </div>
+                `;
+            }
+
+            dynamicContainer.innerHTML = dynamicHtml;
+
+            if (currentCategory === 'characters') {
+                renderRelatedCharsCheckboxes(item.relatedChars || []);
+                renderGalleryEdit(item.gallery || []);
+            }
+            if (currentCategory === 'songs') {
+                renderGalleryEdit(item.gallery || []);
+            }
+        }
+
+        function openCreate(category) {
+            currentCategory = category;
+            currentItemId = null; // null indicates new item creation
+
+            document.getElementById('edit-page-title').textContent = 'Create New ' + category.charAt(0).toUpperCase() + category.slice(1);
+            document.getElementById('delete-btn-group').classList.add('hidden');
+            document.getElementById('delete-confirm-group').classList.add('hidden');
+
+            document.getElementById('edit-name').value = '';
+            document.getElementById('edit-img').value = '';
+            document.getElementById('edit-img-x').value = 50;
+            document.getElementById('edit-img-y').value = 50;
+            document.getElementById('edit-desc').value = '';
+
+            renderDynamicEditFields({}); // Empty object for new item
+            navigateTo('edit');
+        }
+
+        function openEdit() {
+            const item = wikiData[currentCategory].find(i => i.id === currentItemId);
+            if (!item) return;
+
+            document.getElementById('edit-page-title').textContent = 'Edit Page';
+            document.getElementById('delete-btn-group').classList.remove('hidden');
+            document.getElementById('delete-confirm-group').classList.add('hidden');
+
+            document.getElementById('edit-name').value = item.name || '';
+            document.getElementById('edit-img').value = item.img || '';
+            document.getElementById('edit-img-x').value = item.imgPosX !== undefined ? item.imgPosX : 50;
+            document.getElementById('edit-img-y').value = item.imgPosY !== undefined ? item.imgPosY : 50;
+            document.getElementById('edit-desc').value = item.desc || '';
+
+            renderDynamicEditFields(item);
+            navigateTo('edit');
+        }
+
+        function renderRelatedCharsCheckboxes(selectedData) {
+            const container = document.getElementById('edit-related-chars-container');
+            if (!container) return;
+            
+            const normalizedData = selectedData.map(item => typeof item === 'string' ? {id: item, label: ''} : item);
+            
+            let html = '<div class="space-y-1 border border-gray-300 p-2 bg-white max-h-48 overflow-y-auto">';
+            wikiData.characters.forEach(char => {
+                if (char.id === currentItemId) return;
+                
+                const selectedItem = normalizedData.find(d => d.id === char.id && !d.isCustom);
+                const checked = selectedItem ? 'checked' : '';
+                const labelValue = selectedItem ? escapeAttr(selectedItem.label) : '';
+                
+                html += `
+                    <div class="flex items-center gap-2 text-sm hover:bg-gray-50 p-1">
+                        <label class="flex items-center gap-2 cursor-pointer w-5/12">
+                            <input type="checkbox" class="related-char-cb" value="${char.id}" ${checked} onchange="toggleRelatedLabel(this, '${char.id}')">
+                            <span class="truncate font-bold">${escapeHTML(char.name)}</span>
+                        </label>
+                        <input type="text" id="related-label-${char.id}" class="related-char-label flex-1 border border-gray-300 px-2 py-1 text-xs outline-none focus:border-blue-500 bg-white disabled:bg-gray-100 disabled:text-gray-400" placeholder="Role/Relation (e.g. Brother)" value="${labelValue}" ${checked ? '' : 'disabled'}>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            html += `
+                <div class="mt-2 border border-gray-300 bg-gray-50 p-2">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-gray-600">Unregistered Characters</span>
+                        <button type="button" onclick="addCustomRelatedRow()" class="text-xs bg-gray-200 px-2 py-1 border border-gray-300 cursor-pointer font-bold hover:bg-gray-300 text-black">Add</button>
+                    </div>
+                    <div id="custom-related-container" class="space-y-1">`;
+            
+            normalizedData.forEach(item => {
+                if (item.isCustom) {
+                    html += getCustomRelatedCharRow(item.name, item.label);
+                }
+            });
+
+            html += `</div></div>`;
+            container.innerHTML = html;
+        }
+
+        function getCustomRelatedCharRow(name = '', label = '') {
+            return `
+                <div class="flex items-center gap-2 custom-related-row">
+                    <input type="text" class="cr-name w-5/12 border border-gray-300 px-2 py-1 text-xs outline-none focus:border-blue-500 bg-white text-black" placeholder="Name" value="${escapeAttr(name)}">
+                    <input type="text" class="cr-label flex-1 border border-gray-300 px-2 py-1 text-xs outline-none focus:border-blue-500 bg-white text-black" placeholder="Role/Relation (e.g. Brother)" value="${escapeAttr(label)}">
+                    <button type="button" onclick="this.closest('.custom-related-row').remove()" class="bg-red-50 text-red-600 px-2 py-1 border border-red-200 cursor-pointer text-xs font-bold hover:bg-red-100 flex-shrink-0">X</button>
+                </div>
+            `;
+        }
+
+        function addCustomRelatedRow() {
+            const container = document.getElementById('custom-related-container');
+            if (container) {
+                container.insertAdjacentHTML('beforeend', getCustomRelatedCharRow());
+            }
+        }
+
+        function toggleRelatedLabel(cb, charId) {
+            const input = document.getElementById(`related-label-${charId}`);
+            if (input) {
+                input.disabled = !cb.checked;
+                if (!cb.checked) input.value = '';
+            }
+        }
+
+        function renderGalleryEdit(galleryArray) {
+            const container = document.getElementById('edit-gallery-list');
+            if (!container) return;
+            container.innerHTML = '';
+            galleryArray.forEach(g => {
+                addGalleryRow(g.tab || 'Main', g.title, g.url);
+            });
+        }
+
+        function addGalleryRow(tab = 'Main', title = '', url = '') {
+            const container = document.getElementById('edit-gallery-list');
+            if (!container) return;
+            const div = document.createElement('div');
+            div.className = 'flex flex-col md:flex-row gap-2 items-start md:items-center gallery-row border border-gray-200 p-2 bg-white';
+            div.innerHTML = `
+                <div class="flex gap-2 w-full md:w-5/12">
+                    <input type="text" class="g-tab w-1/2 border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-sm" placeholder="Tab Name (e.g. Idle)" value="${escapeAttr(tab)}">
+                    <input type="text" class="g-title w-1/2 border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-sm" placeholder="Image Title" value="${escapeAttr(title)}">
+                </div>
+                <div class="flex gap-2 w-full md:w-7/12">
+                    <input type="text" class="g-url flex-1 border border-gray-300 p-2 bg-white outline-none focus:border-blue-500 text-sm" placeholder="Image URL" value="${escapeAttr(url)}">
+                    <button type="button" onclick="this.closest('.gallery-row').remove()" class="bg-red-50 text-red-600 px-3 py-2 border border-red-200 cursor-pointer text-sm font-bold hover:bg-red-100 flex-shrink-0">Delete</button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function saveEdit() {
+            let isNew = false;
+            let newItem = {};
+
+            if (currentItemId === null) {
+                isNew = true;
+                currentItemId = 'item_' + Date.now();
+                newItem.id = currentItemId;
+            } else {
+                newItem.id = currentItemId;
+                const itemIndex = wikiData[currentCategory].findIndex(i => i.id === currentItemId);
+                if (itemIndex === -1) return;
+            }
+            
+            newItem.name = document.getElementById('edit-name').value;
+            newItem.img = document.getElementById('edit-img').value;
+            newItem.imgPosX = parseInt(document.getElementById('edit-img-x').value, 10) || 50;
+            newItem.imgPosY = parseInt(document.getElementById('edit-img-y').value, 10) || 50;
+            newItem.desc = document.getElementById('edit-desc').value;
+
+            let gallery = [];
+            if (currentCategory === 'characters' || currentCategory === 'songs') {
+                document.querySelectorAll('.gallery-row').forEach(row => {
+                    const tab = row.querySelector('.g-tab').value.trim() || 'Main';
+                    const title = row.querySelector('.g-title').value.trim();
+                    const url = row.querySelector('.g-url').value.trim();
+                    if (title || url) {
+                        gallery.push({ tab, title, url });
+                    }
+                });
+            }
+
+            if (currentCategory === 'mods') {
+                newItem.releaseDate = document.getElementById('edit-releaseDate').value;
+                newItem.director = document.getElementById('edit-director').value;
+                newItem.links = document.getElementById('edit-links').value;
+            } else if (currentCategory === 'characters') {
+                let relatedChars = [];
+                document.querySelectorAll('.related-char-cb:checked').forEach(cb => {
+                    const labelInput = document.getElementById(`related-label-${cb.value}`);
+                    relatedChars.push({
+                        id: cb.value,
+                        label: labelInput ? labelInput.value.trim() : ''
+                    });
+                });
+                document.querySelectorAll('.custom-related-row').forEach(row => {
+                    const name = row.querySelector('.cr-name').value.trim();
+                    const label = row.querySelector('.cr-label').value.trim();
+                    if (name) {
+                        relatedChars.push({
+                            isCustom: true,
+                            name: name,
+                            label: label
+                        });
+                    }
+                });
+                newItem.role = document.getElementById('edit-role').value;
+                newItem.gender = document.getElementById('edit-gender').value;
+                newItem.sexuality = document.getElementById('edit-sexuality').value;
+                newItem.age = document.getElementById('edit-age').value;
+                newItem.nationality = document.getElementById('edit-nationality').value;
+                newItem.owner = document.getElementById('edit-owner').value;
+                newItem.links = document.getElementById('edit-links').value;
+                newItem.relatedChars = relatedChars;
+                newItem.gallery = gallery;
+            } else if (currentCategory === 'songs') {
+                newItem.composer = document.getElementById('edit-composer').value;
+                newItem.gallery = gallery;
+            }
+
+            if (isNew) {
+                wikiData[currentCategory].push(newItem);
+            } else {
+                const itemIndex = wikiData[currentCategory].findIndex(i => i.id === currentItemId);
+                if (itemIndex > -1) {
+                    wikiData[currentCategory][itemIndex] = newItem;
+                }
+            }
+
+            saveToLocalStorage();
+            renderList(currentCategory, wikiData[currentCategory]);
+            openDetail(currentCategory, currentItemId);
+        }
+
+        function cancelEdit() {
+            if (currentItemId === null) {
+                navigateTo('home');
+            } else {
+                openDetail(currentCategory, currentItemId);
+            }
+        }
+
+        function showDeleteConfirm() {
+            document.getElementById('delete-btn-group').classList.add('hidden');
+            document.getElementById('delete-confirm-group').classList.remove('hidden');
+        }
+
+        function cancelDelete() {
+            document.getElementById('delete-btn-group').classList.remove('hidden');
+            document.getElementById('delete-confirm-group').classList.add('hidden');
+        }
+
+        function confirmDelete() {
+            const itemIndex = wikiData[currentCategory].findIndex(i => i.id === currentItemId);
+            if (itemIndex > -1) {
+                wikiData[currentCategory].splice(itemIndex, 1);
+                saveToLocalStorage();
+                renderList(currentCategory, wikiData[currentCategory]);
+                navigateTo('home');
+            }
+        }
+
+        function copyHTML() {
+            const cloneDoc = document.cloneNode(true);
+
+            ['mods', 'characters', 'songs'].forEach(id => {
+                const el = cloneDoc.getElementById(`list-${id}`);
+                if(el) el.innerHTML = '';
+            });
+
+            cloneDoc.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            cloneDoc.getElementById('view-home').classList.add('active');
+            
+            const leftPane = cloneDoc.getElementById('detail-left-pane');
+            if(leftPane) leftPane.innerHTML = '';
+            const rightPane = cloneDoc.getElementById('detail-right-pane');
+            if(rightPane) rightPane.innerHTML = '';
+            const dynamicFields = cloneDoc.getElementById('edit-dynamic-fields');
+            if(dynamicFields) dynamicFields.innerHTML = '';
+
+            const scripts = cloneDoc.getElementsByTagName('script');
+            for (let i = scripts.length - 1; i >= 0; i--) {
+                const script = scripts[i];
+                if (!script.src && script.type !== 'module') {
+                    script.parentNode.removeChild(script);
+                }
+            }
+
+            const styles = cloneDoc.getElementsByTagName('style');
+            for (let i = styles.length - 1; i >= 0; i--) {
+                const style = styles[i];
+                if (style.textContent.includes('--tw-')) {
+                    style.parentNode.removeChild(style);
+                }
+            }
+
+            const remainingScripts = cloneDoc.getElementsByTagName('script');
+            for (let script of remainingScripts) {
+                if (script.textContent.includes('const initialWikiData =')) {
+                    script.textContent = script.textContent.replace(
+                        /const initialWikiData = \{[\s\S]*?\};\n(?=\s*let wikiData)/,
+                        `const initialWikiData = ${JSON.stringify(wikiData, null, 12)};\n`
+                    );
+                    break;
+                }
+            }
+
+            const htmlString = "<!DOCTYPE html>\n" + cloneDoc.documentElement.outerHTML;
+
+            const textArea = document.createElement("textarea");
+            textArea.value = htmlString;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showNotification("HTML copied to clipboard. You can now paste it into your file.");
+            } catch (err) {
+                showNotification("Failed to copy HTML.");
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showNotification(msg) {
+            const toast = document.createElement('div');
+            toast.textContent = msg;
+            toast.className = 'fixed bottom-5 right-5 bg-green-600 text-white px-5 py-3 rounded shadow-lg z-50 font-bold';
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
+        }
+
+        window.navigateTo = navigateTo;
+        window.switchGalleryTab = switchGalleryTab;
+        window.openDetail = openDetail;
+        window.openCreate = openCreate;
+        window.openEdit = openEdit;
+        window.saveEdit = saveEdit;
+        window.cancelEdit = cancelEdit;
+        window.showDeleteConfirm = showDeleteConfirm;
+        window.cancelDelete = cancelDelete;
+        window.confirmDelete = confirmDelete;
+        window.copyHTML = copyHTML;
+        window.addGalleryRow = addGalleryRow;
+        window.toggleRelatedLabel = toggleRelatedLabel;
+        window.addCustomRelatedRow = addCustomRelatedRow;
+    </script>
+</body></html>
